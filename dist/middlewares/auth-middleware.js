@@ -20,8 +20,12 @@ const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
             req.user = yield users_query_repository_1.usersQueryRepo.getDataById(userId);
             next();
         }
+        else {
+            res.sendStatus(401);
+        }
     }
-    res.sendStatus(401);
-    return;
+    else {
+        res.sendStatus(401);
+    }
 });
 exports.authMiddleware = authMiddleware;

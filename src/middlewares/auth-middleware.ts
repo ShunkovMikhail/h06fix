@@ -9,8 +9,10 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
             if (userId) {
             req.user = await usersQueryRepo.getDataById(userId)
             next()
-        }
+        } else {
+                res.sendStatus(401)
+            }
+    } else {
+        res.sendStatus(401)
     }
-    res.sendStatus(401)
-    return
 }
