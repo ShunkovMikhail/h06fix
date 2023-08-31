@@ -15,7 +15,7 @@ const setDefault_1 = require("../../utils/setDefault");
 exports.commentsQueryRepo = {
     get(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield mongo_db_1.DB.getOne('comments', { id: id }, {});
+            return yield mongo_db_1.DB.getOne('comments', { id: id }, { postId: 0 });
         });
     },
     getAllByPost(req) {
@@ -33,7 +33,7 @@ exports.commentsQueryRepo = {
                 page: pageNumber,
                 pageSize: pageSize,
                 totalCount: resCount,
-                items: yield mongo_db_1.DB.getAll('comments', { postId: req.params.id }, {}, { [sortBy]: sortDirection }, S, L)
+                items: yield mongo_db_1.DB.getAll('comments', { postId: req.params.id }, { postId: 0 }, { [sortBy]: sortDirection }, S, L)
             };
             return page;
         });

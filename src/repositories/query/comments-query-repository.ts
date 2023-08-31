@@ -9,7 +9,7 @@ import { setDefault } from '../../utils/setDefault'
 export const commentsQueryRepo = {
 
     async get(id: string): Promise<CommentViewModel | null> {
-        return await DB.getOne('comments', {id: id}, {}) as CommentViewModel | null
+        return await DB.getOne('comments', {id: id}, { postId: 0 }) as CommentViewModel | null
     },
 
     async getAllByPost(req: TypeOfRequestP_Query<{ id: string }, {
@@ -34,7 +34,7 @@ export const commentsQueryRepo = {
             pageSize: pageSize,
             totalCount: resCount,
             items: await DB.getAll('comments', {postId: req.params.id},
-                {}, {[sortBy]: sortDirection}, S, L) as Array<CommentViewModel | null>
+                { postId: 0 }, {[sortBy]: sortDirection}, S, L) as Array<CommentViewModel | null>
         }
 
         return page

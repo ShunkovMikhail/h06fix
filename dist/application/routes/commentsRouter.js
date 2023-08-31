@@ -14,16 +14,21 @@ const inputValidation_1 = require("../../inputValidation");
 const express_1 = require("express");
 const express_validator_1 = require("express-validator");
 const errorMapper_1 = require("../../utils/errorMapper");
-const users_service_1 = require("../../domain/users-service");
 const auth_middleware_1 = require("../../middlewares/auth-middleware");
 const comments_query_repository_1 = require("../../repositories/query/comments-query-repository");
 const comments_service_1 = require("../../domain/comments-service");
 exports.commentsRouter = (0, express_1.Router)({});
 exports.commentsRouter.put('/:id', auth_middleware_1.authMiddleware, inputValidation_1.CommentVdChain, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = (0, express_validator_1.validationResult)(req);
-    if (yield comments_query_repository_1.commentsQueryRepo.exists(req.params.id)) {
+    const comment = yield comments_query_repository_1.commentsQueryRepo.get(req.params.id);
+    if (comment) {
         if (result.isEmpty()) {
-            res.status(201).json(yield comments_service_1.commentsService.update(req));
+            if (comment.commentatorInfo.userId === req.user.id) {
+                res.status(204).json(yield comments_service_1.commentsService.update(req));
+            }
+            else {
+                res.sendStatus(403);
+            }
         }
         else {
             res.status(400).json(yield (0, errorMapper_1.ErrorMapper)(result));
@@ -42,5 +47,16 @@ exports.commentsRouter.get('/:id', (req, res) => __awaiter(void 0, void 0, void 
     }
 }));
 exports.commentsRouter.delete('/:id', auth_middleware_1.authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.sendStatus(yield users_service_1.usersService.delete(req));
+    const comment = yield comments_query_repository_1.commentsQueryRepo.get(req.params.id);
+    if (comment) {
+        if (comment.commentatorInfo.userId === req.user.id) {
+            res.sendStatus(yield comments_service_1.commentsService.delete(req));
+        }
+        else {
+            res.sendStatus(403);
+        }
+    }
+    else {
+        res.sendStatus(404);
+    }
 }));
