@@ -34,7 +34,6 @@
   "scripts": {
     "watchDIST": "yarn nodemon --inspect dist/index.js",
     "watchSRC": "tsc -w",
-    "startExpress": "tsc & nodemon dist/index.js",
     "jest": "jest -i"
   }
 }
