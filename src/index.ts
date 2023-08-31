@@ -1,6 +1,6 @@
 import { serverApp } from './app'
 import { runDb } from './repositories/connection'
-const port = 3000
+const port = 5000
 
 const startApp = async () => {
     await runDb()
